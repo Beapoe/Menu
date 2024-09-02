@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="点餐"
+        android:id="@+id/NavigationMenuList"
+        android:icon="@drawable/menu"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:title="付款"
+        android:id="@+id/NavigationSettle"
+        android:icon="@drawable/settle"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:title="商铺"
+        android:id="@+id/NavigationStore"
+        android:icon="@drawable/store"
+        tools:ignore="HardcodedText" />
+</menu>
