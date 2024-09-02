@@ -5,50 +5,70 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import pers.beapoe.menu.CustomApplication;
 import pers.beapoe.menu.Item;
 import pers.beapoe.menu.R;
-import pers.beapoe.menu.view_models.ItemModel;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> {
-    CustomApplication app = (CustomApplication) new Activity().getApplication();
-    ArrayList<Item> items = app.getItems();
-    @SuppressLint("StaticFieldLeak")
-    static Activity activity;
+    Activity activity;
+    CustomApplication app;
+    ArrayList<Item> items;
+    ArrayList<Item> ordered;
 
-    public MenuAdapter(Activity activity){MenuAdapter.activity = activity;}
+
+    public MenuAdapter(Activity activity){
+        this.activity = activity;
+        app = (CustomApplication) activity.getApplication();
+        items = app.getItems();
+    }
     @NonNull
     @Override
     public MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new MenuViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item,parent,false));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull MenuViewHolder holder, int position) {
-        holder.itemModel.getName().setText(items.get(position).getName());
-        holder.itemModel.getCopies().setText(items.get(position).getCopies());
-        holder.itemModel.getUnit().setText(items.get(position).getUnit());
-        holder.itemModel.getImage().setImageURI(items.get(position).getImage());
-        holder.itemModel.getPlus().setOnClickListener(v -> {
-            items.get(holder.getBindingAdapterPosition()).setCopies(String.valueOf(Integer.parseInt(items.get(holder.getBindingAdapterPosition()).getCopies())+1));
-            holder.itemModel.getCopies().setText(items.get(holder.getBindingAdapterPosition()).getCopies());
+        holder.Name.setText(items.get(position).getName());
+        holder.Copies.setText(String.valueOf(items.get(position).getCopies()));
+        holder.Unit.setText(items.get(position).getUnit());
+        holder.Price.setText(items.get(holder.getBindingAdapterPosition()).getPrice() +"元/"+items.get(holder.getBindingAdapterPosition()).getUnit());
+        //holder.Image.setImageURI(items.get(position).getImage());
+        holder.Plus.setOnClickListener(v -> {
+            if(items.get(holder.getBindingAdapterPosition()).getCopies()==0) items.get(holder.getBindingAdapterPosition()).setOrdered(false);
+            if(!items.get(holder.getBindingAdapterPosition()).isOrdered()){
+                items.get(holder.getBindingAdapterPosition()).setOrdered(true);
+                ArrayList<Item> ordered = app.getOrdered();
+                ordered.add(items.get(holder.getBindingAdapterPosition()));
+                Set<Item> new_ordered = new LinkedHashSet<>(ordered);
+                app.setOrdered(new ArrayList<>(new_ordered));
+            }
+            items.get(holder.getBindingAdapterPosition()).setCopies(items.get(holder.getBindingAdapterPosition()).getCopies()+1);
+            holder.Copies.setText(String.valueOf(items.get(holder.getBindingAdapterPosition()).getCopies()));
+            app.setItems(items);
         });
-        holder.itemModel.getDecrease().setOnClickListener(v -> {
-            if (Integer.parseInt(items.get(holder.getBindingAdapterPosition()).getCopies()) == 0)
-                Toast.makeText(new Activity(), "再少，你就要倒贴我几份了", Toast.LENGTH_SHORT).show();
+        holder.Decrease.setOnClickListener(v -> {
+            if (items.get(holder.getBindingAdapterPosition()).getCopies() == 0)
+                Toast.makeText(activity, "再少，你就要倒贴我几"+items.get(holder.getBindingAdapterPosition()).getUnit()+"了", Toast.LENGTH_SHORT).show();
             else {
-                items.get(holder.getBindingAdapterPosition()).setCopies(String.valueOf(Integer.parseInt(items.get(holder.getBindingAdapterPosition()).getCopies()) - 1));
-                holder.itemModel.getCopies().setText(items.get(holder.getBindingAdapterPosition()).getCopies());
+                items.get(holder.getBindingAdapterPosition()).setCopies(items.get(holder.getBindingAdapterPosition()).getCopies()-1);
+                holder.Copies.setText(String.valueOf(items.get(holder.getBindingAdapterPosition()).getCopies()));
+                app.setItems(items);
             }
         });
-        app.setItems(items);
     }
 
     @Override
@@ -57,10 +77,18 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     }
 
     public static class MenuViewHolder extends RecyclerView.ViewHolder{
-        ItemModel itemModel;
+        public ImageView Image;
+        public TextView Name,Copies,Unit,Price;
+        public Button Plus,Decrease;
         public MenuViewHolder(@NonNull View itemView) {
             super(itemView);
-            itemModel = ItemModel.getModel(activity);
+            Image = itemView.findViewById(R.id.Image);
+            Name = itemView.findViewById(R.id.Name);
+            Copies = itemView.findViewById(R.id.Copies);
+            Unit = itemView.findViewById(R.id.Unit);
+            Price = itemView.findViewById(R.id.Price);
+            Plus = itemView.findViewById(R.id.Plus);
+            Decrease = itemView.findViewById(R.id.Decrease);
         }
     }
 }

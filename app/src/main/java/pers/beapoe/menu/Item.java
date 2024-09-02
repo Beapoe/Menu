@@ -4,7 +4,10 @@ import android.net.Uri;
 
 public class Item {
     Uri Image;
-    String Name,Copies,Unit;
+    int Copies = 0;
+    int Price = 0;
+    String Name,Unit;
+    boolean isOrdered = false;
 
     public Item(String Name){this.Name = Name;}
 
@@ -24,11 +27,11 @@ public class Item {
         Image = image;
     }
 
-    public String getCopies() {
+    public int getCopies() {
         return Copies;
     }
 
-    public void setCopies(String copies) {
+    public void setCopies(int copies) {
         Copies = copies;
     }
 
@@ -39,4 +42,12 @@ public class Item {
     public void setUnit(String unit) {
         Unit = unit;
     }
+
+    public int getPrice() {return Price;}
+
+    public void setPrice(int price) {Price = price;}
+
+    public boolean isOrdered() {return isOrdered;}
+
+    public void setOrdered(boolean ordered) {isOrdered = ordered;}
 }

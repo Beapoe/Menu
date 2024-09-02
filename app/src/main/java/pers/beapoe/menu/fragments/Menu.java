@@ -1,5 +1,6 @@
 package pers.beapoe.menu.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -20,8 +21,8 @@ import pers.beapoe.menu.adapters.MenuAdapter;
  * create an instance of this fragment.
  */
 public class Menu extends Fragment {
-    Activity activity;
-
+    @SuppressLint("StaticFieldLeak")
+    static Activity activity;
     public Menu() {
         // Required empty public constructor
     }
@@ -31,25 +32,24 @@ public class Menu extends Fragment {
      * this fragment using the provided parameters.
      * @return A new instance of fragment Menu.
      */
-    // TODO: Rename and change types and number of parameters
-    public static Menu newInstance(Activity activity) {
+    public static Menu newInstance(Activity activity1) {
+        activity = activity1;
         return new Menu();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity.setContentView(R.layout.fragment_menu);
-        RecyclerView recyclerView = activity.findViewById(R.id.MenuList);
-        MenuAdapter adapter = new MenuAdapter(activity);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        recyclerView.setAdapter(adapter);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_menu, container, false);
+        View parent = inflater.inflate(R.layout.fragment_menu, container, false);
+        RecyclerView list = parent.findViewById(R.id.MenuList);
+        list.setLayoutManager(new LinearLayoutManager(activity));
+        list.setAdapter(new MenuAdapter(activity));
+        return parent;
     }
 }
