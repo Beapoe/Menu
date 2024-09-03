@@ -67,13 +67,7 @@ public class Settle extends Fragment {
         app.setInfo(Info);
         Info.setText("共计"+app.getTotal()+"元");
         settle.setOnClickListener(v -> {
-            int total = app.getTotal();
-            ArrayList<Item> ordered = app.getOrdered();
-            for(Item item:ordered) total += item.getCopies()*item.getPrice();
-            app.setTotal(total);
-            Intent intent = new Intent(activity, Payment.class);
-            intent.putExtra("Total amount",total);
-            startActivity(intent);
+            startActivity(new Intent(activity, Payment.class));
         });
         return parent;
     }

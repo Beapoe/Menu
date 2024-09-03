@@ -59,7 +59,6 @@ public class SettleAdapter extends RecyclerView.Adapter<SettleAdapter.SettleView
                 ordered.get(holder.getBindingAdapterPosition()).setCopies(ordered.get(holder.getBindingAdapterPosition()).getCopies()-1);
                 holder.Copies.setText(String.valueOf(ordered.get(holder.getBindingAdapterPosition()).getCopies()));
                 BottomNavigationView navigation = app.getNavigation();
-                navigation.getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
                 app.setOrdered(ordered);
                 app.setTotal(app.getTotal()-ordered.get(holder.getBindingAdapterPosition()).getPrice());
                 app.getInfo().setText("共计"+app.getTotal()+"元");
@@ -67,14 +66,11 @@ public class SettleAdapter extends RecyclerView.Adapter<SettleAdapter.SettleView
                     if(ordered.isEmpty()) app.getNavigation().getMenu().getItem(1).setEnabled(!ordered.isEmpty());
                     ordered.remove(ordered.get(holder.getBindingAdapterPosition()));
                     if(!ordered.isEmpty()){
-                        if(position!=0){
-                            for(int i=1;i<=ordered.size();i++) onBindViewHolder(holder,position-i);
-                        }else{
-                            onBindViewHolder(holder,position);
-                        }
+                        for(int i=0;i<ordered.size();i++)
+                            onBindViewHolder(holder,i);
                     }
                 }
-
+                navigation.getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
             }
         });
     }
