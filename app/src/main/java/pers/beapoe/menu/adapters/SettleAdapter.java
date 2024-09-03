@@ -43,7 +43,7 @@ public class SettleAdapter extends RecyclerView.Adapter<SettleAdapter.SettleView
         holder.Name.setText(ordered.get(position).getName());
         holder.Copies.setText(String.valueOf(ordered.get(position).getCopies()));
         holder.Unit.setText(ordered.get(position).getUnit());
-        holder.Price.setText(ordered.get(holder.getBindingAdapterPosition()).getPrice() +"元/"+ordered.get(holder.getBindingAdapterPosition()).getUnit());
+        holder.Price.setText(ordered.get(position).getPrice() +"元/"+ordered.get(position).getUnit());
         //holder.Image.setImageURI(items.get(position).getImage());
         holder.Plus.setOnClickListener(v -> {
             ordered.get(holder.getBindingAdapterPosition()).setCopies(ordered.get(holder.getBindingAdapterPosition()).getCopies()+1);
@@ -64,8 +64,15 @@ public class SettleAdapter extends RecyclerView.Adapter<SettleAdapter.SettleView
                 app.setTotal(app.getTotal()-ordered.get(holder.getBindingAdapterPosition()).getPrice());
                 app.getInfo().setText("共计"+app.getTotal()+"元");
                 if(ordered.get(holder.getBindingAdapterPosition()).getCopies()==0) {
-                    ordered.remove(ordered.get(ordered.indexOf(ordered.get(holder.getBindingAdapterPosition()))));
-                    app.getNavigation().getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
+                    if(ordered.isEmpty()) app.getNavigation().getMenu().getItem(1).setEnabled(!ordered.isEmpty());
+                    ordered.remove(ordered.get(holder.getBindingAdapterPosition()));
+                    if(!ordered.isEmpty()){
+                        if(position!=0){
+                            for(int i=1;i<=ordered.size();i++) onBindViewHolder(holder,position-i);
+                        }else{
+                            onBindViewHolder(holder,position);
+                        }
+                    }
                 }
 
             }

@@ -40,8 +40,12 @@ public class Main extends FragmentActivity {
         Item item2 = new Item("测试2");
         item2.setUnit("个");
         item2.setPrice(999);
+        Item item3 = new Item("测试3");
+        item3.setUnit("片");
+        item3.setPrice(9999);
         items.add(item);
         items.add(item2);
+        items.add(item3);
         CustomApplication app = (CustomApplication)getApplication();
         app.setItems(items);
         transaction.add(Menu.newInstance(this),MENU);

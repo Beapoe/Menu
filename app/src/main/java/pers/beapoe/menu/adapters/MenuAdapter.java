@@ -62,7 +62,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             holder.Copies.setText(String.valueOf(items.get(holder.getBindingAdapterPosition()).getCopies()));
             app.setItems(items);
             app.getNavigation().getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
-            app.setTotal(app.getTotal()+app.getOrdered().get(holder.getBindingAdapterPosition()).getPrice());
+            app.setTotal(app.getTotal()+app.getOrdered().get(app.getOrdered().indexOf(items.get(holder.getBindingAdapterPosition()))).getPrice());
         });
         holder.Decrease.setOnClickListener(v -> {
             if (items.get(holder.getBindingAdapterPosition()).getCopies() == 0)
@@ -73,10 +73,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
                 BottomNavigationView navigation = app.getNavigation();
                 navigation.getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
                 app.setItems(items);
-                app.setTotal(app.getTotal()-app.getOrdered().get(holder.getBindingAdapterPosition()).getPrice());
+                app.setTotal(app.getTotal()-items.get(holder.getBindingAdapterPosition()).getPrice());
                 if(items.get(holder.getBindingAdapterPosition()).getCopies()==0) {
                     app.getOrdered().remove(app.getOrdered().get(app.getOrdered().indexOf(items.get(holder.getBindingAdapterPosition()))));
-                    app.getNavigation().getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
+                    if(app.getOrdered().isEmpty()) app.getNavigation().getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
                 }
             }
         });
