@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 
 import pers.beapoe.menu.CustomApplication;
@@ -47,14 +49,25 @@ public class SettleAdapter extends RecyclerView.Adapter<SettleAdapter.SettleView
             ordered.get(holder.getBindingAdapterPosition()).setCopies(ordered.get(holder.getBindingAdapterPosition()).getCopies()+1);
             holder.Copies.setText(String.valueOf(ordered.get(holder.getBindingAdapterPosition()).getCopies()));
             app.setOrdered(ordered);
+            app.setTotal(app.getTotal()+ordered.get(holder.getBindingAdapterPosition()).getPrice());
+            app.getInfo().setText("共计"+app.getTotal()+"元");
         });
         holder.Decrease.setOnClickListener(v -> {
-            if (ordered.get(holder.getBindingAdapterPosition()).getCopies() == 0)
+            if (ordered.get(holder.getBindingAdapterPosition()).getCopies() == 0 || app.getTotal() == 0)
                 Toast.makeText(activity, "再少，你就要倒贴我几"+ordered.get(holder.getBindingAdapterPosition()).getUnit()+"了", Toast.LENGTH_SHORT).show();
             else {
                 ordered.get(holder.getBindingAdapterPosition()).setCopies(ordered.get(holder.getBindingAdapterPosition()).getCopies()-1);
                 holder.Copies.setText(String.valueOf(ordered.get(holder.getBindingAdapterPosition()).getCopies()));
+                BottomNavigationView navigation = app.getNavigation();
+                navigation.getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
                 app.setOrdered(ordered);
+                app.setTotal(app.getTotal()-ordered.get(holder.getBindingAdapterPosition()).getPrice());
+                app.getInfo().setText("共计"+app.getTotal()+"元");
+                if(ordered.get(holder.getBindingAdapterPosition()).getCopies()==0) {
+                    ordered.remove(ordered.get(ordered.indexOf(ordered.get(holder.getBindingAdapterPosition()))));
+                    app.getNavigation().getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
+                }
+
             }
         });
     }

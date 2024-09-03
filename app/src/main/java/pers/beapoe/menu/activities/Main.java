@@ -1,4 +1,4 @@
-package pers.beapoe.menu;
+package pers.beapoe.menu.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -13,8 +13,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import pers.beapoe.menu.CustomApplication;
+import pers.beapoe.menu.Item;
+import pers.beapoe.menu.R;
 import pers.beapoe.menu.fragments.Menu;
 import pers.beapoe.menu.fragments.Settle;
+import pers.beapoe.menu.fragments.Store;
 
 public class Main extends FragmentActivity {
     @SuppressLint("ResourceType")
@@ -45,13 +49,15 @@ public class Main extends FragmentActivity {
         transaction.replace(R.id.Fragments,Menu.newInstance(this));
         transaction.commit();
 
+        navigation.getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
+        app.setNavigation(navigation);
         navigation.setOnItemSelectedListener(item1 -> {
             String clickedTitle = (String) item1.getTitle();
             switch (Objects.requireNonNull(clickedTitle)){
                 case "点餐":
-                    FragmentTransaction transaction12 = fragmentManager.beginTransaction();
-                    transaction12.replace(R.id.Fragments, Menu.newInstance(Main.this));
-                    transaction12.commit();
+                    FragmentTransaction transaction1 = fragmentManager.beginTransaction();
+                    transaction1.replace(R.id.Fragments, Menu.newInstance(Main.this));
+                    transaction1.commit();
                     break;
                 case "付款":
                     ArrayList<Item> ordered = app.getOrdered();
@@ -63,9 +69,14 @@ public class Main extends FragmentActivity {
                             }
                         }
                     }
-                    FragmentTransaction transaction1 = fragmentManager.beginTransaction();
-                    transaction1.replace(R.id.Fragments, Settle.newInstance(Main.this));
-                    transaction1.commit();
+                    FragmentTransaction transaction2 = fragmentManager.beginTransaction();
+                    transaction2.replace(R.id.Fragments, Settle.newInstance(Main.this));
+                    transaction2.commit();
+                    break;
+                case "商铺":
+                    FragmentTransaction transaction3 = fragmentManager.beginTransaction();
+                    transaction3.replace(R.id.Fragments, Store.newInstance());
+                    transaction3.commit();
                     break;
                 default:
                     FragmentTransaction transaction4 = fragmentManager.beginTransaction();

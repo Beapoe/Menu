@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -59,6 +61,8 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             items.get(holder.getBindingAdapterPosition()).setCopies(items.get(holder.getBindingAdapterPosition()).getCopies()+1);
             holder.Copies.setText(String.valueOf(items.get(holder.getBindingAdapterPosition()).getCopies()));
             app.setItems(items);
+            app.getNavigation().getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
+            app.setTotal(app.getTotal()+app.getOrdered().get(holder.getBindingAdapterPosition()).getPrice());
         });
         holder.Decrease.setOnClickListener(v -> {
             if (items.get(holder.getBindingAdapterPosition()).getCopies() == 0)
@@ -66,7 +70,14 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
             else {
                 items.get(holder.getBindingAdapterPosition()).setCopies(items.get(holder.getBindingAdapterPosition()).getCopies()-1);
                 holder.Copies.setText(String.valueOf(items.get(holder.getBindingAdapterPosition()).getCopies()));
+                BottomNavigationView navigation = app.getNavigation();
+                navigation.getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
                 app.setItems(items);
+                app.setTotal(app.getTotal()-app.getOrdered().get(holder.getBindingAdapterPosition()).getPrice());
+                if(items.get(holder.getBindingAdapterPosition()).getCopies()==0) {
+                    app.getOrdered().remove(app.getOrdered().get(app.getOrdered().indexOf(items.get(holder.getBindingAdapterPosition()))));
+                    app.getNavigation().getMenu().getItem(1).setEnabled(!app.getOrdered().isEmpty());
+                }
             }
         });
     }

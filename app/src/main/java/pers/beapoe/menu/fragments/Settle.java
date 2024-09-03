@@ -2,6 +2,7 @@ package pers.beapoe.menu.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,8 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import pers.beapoe.menu.CustomApplication;
+import pers.beapoe.menu.Item;
 import pers.beapoe.menu.R;
+import pers.beapoe.menu.activities.Payment;
 import pers.beapoe.menu.adapters.SettleAdapter;
 
 /**
@@ -44,6 +52,7 @@ public class Settle extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,6 +61,20 @@ public class Settle extends Fragment {
         RecyclerView list = parent.findViewById(R.id.OrderedList);
         list.setLayoutManager(new LinearLayoutManager(activity));
         list.setAdapter(new SettleAdapter(activity));
+        Button settle = parent.findViewById(R.id.Settle);
+        CustomApplication app = (CustomApplication)activity.getApplication();
+        TextView Info = parent.findViewById(R.id.Info);
+        app.setInfo(Info);
+        Info.setText("共计"+app.getTotal()+"元");
+        settle.setOnClickListener(v -> {
+            int total = app.getTotal();
+            ArrayList<Item> ordered = app.getOrdered();
+            for(Item item:ordered) total += item.getCopies()*item.getPrice();
+            app.setTotal(total);
+            Intent intent = new Intent(activity, Payment.class);
+            intent.putExtra("Total amount",total);
+            startActivity(intent);
+        });
         return parent;
     }
 }
