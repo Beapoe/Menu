@@ -52,6 +52,8 @@ public class Payment extends Activity {
         ArrayList<Item> items = app.getItems();
         for(Item item:items) item.setCopies(0);
         app.setItems(items);
-        finish();
+        Intent intent = new Intent(this,Main.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
