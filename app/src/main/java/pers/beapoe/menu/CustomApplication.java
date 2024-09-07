@@ -6,6 +6,8 @@ import android.widget.TextView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class CustomApplication extends Application {
     ArrayList<Item> items = new ArrayList<>();
@@ -19,12 +21,16 @@ public class CustomApplication extends Application {
     }
 
     public void setItems(ArrayList<Item> items) {
-        this.items = items;
+        Set<Item> items_set = new LinkedHashSet<>(items);
+        this.items = new ArrayList<>(items_set);
     }
 
     public ArrayList<Item> getOrdered() {return ordered;}
 
-    public void setOrdered(ArrayList<Item> ordered) {this.ordered = ordered;}
+    public void setOrdered(ArrayList<Item> ordered) {
+        Set<Item> ordered_set = new LinkedHashSet<>(ordered);
+        this.ordered = new ArrayList<>(ordered_set);
+    }
 
     public BottomNavigationView getNavigation() {return navigation;}
 

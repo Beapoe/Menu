@@ -50,7 +50,10 @@ public class Payment extends Activity {
         BottomNavigationView navigation = app.getNavigation();
         navigation.getMenu().getItem(1).setEnabled(false);
         ArrayList<Item> items = app.getItems();
-        for(Item item:items) item.setCopies(0);
+        for(Item item:items){
+            item.setCopies(0);
+            item.setOrdered(false);
+        }
         app.setItems(items);
         Intent intent = new Intent(this,Main.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
